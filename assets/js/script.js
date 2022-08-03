@@ -1,15 +1,21 @@
-const texto = (index, nombreRamo) => `Ingrese nota ${index} [${nombreRamo}]`;
+const getPromedio = (inputs) => (inputs.reduce((acc, current) => acc + Number(current.value), 0) / inputs.length).toFixed(2)
+const $ = (_) => document.querySelector(_)
+const idsRows = ['html', 'css', 'javascript']
 
-document.getElementById("nombre").innerHTML = prompt("Ingrese nombre:");
-document.getElementById("carrera").innerHTML = prompt("Ingrese carrera:");
+$("#nombre").innerHTML = prompt("Ingrese nombre:");
+$("#carrera").innerHTML = prompt("Ingrese carrera:");
 
-const tablaNotas = document.getElementById("notas");
-for (let i = 0; i < tablaNotas.childElementCount; i++){
-    const ramo = tablaNotas.children[i];
-    let suma = 0;
-    for (let j = 1; j < ramo.childElementCount - 1; j++){
-        ramo.children[j].innerHTML = prompt(texto(j, ramo.children[0].innerText));
-        suma += Number(ramo.children[j].innerText);
-    }
-    ramo.lastElementChild.innerHTML = (suma/3).toFixed(2);
-}
+idsRows.forEach(id => {
+    const inputsById = [...$(`#${id}`).elements]
+    const showPromedio = $(`#promedio-${id}`)
+    showPromedio.textContent = `Promedio de ${id}`
+    inputsById.forEach((input, i) => {
+        input.value = ''
+        input.placeholder = `Ingrese ${i + 1}º nota de ${id}`
+        input.type = "number"
+        input.step = 0.1
+        input.min = 0
+        input.max = 7
+        input.addEventListener('input', () => showPromedio.textContent = getPromedio(inputsById))
+    })
+})
